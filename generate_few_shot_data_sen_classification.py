@@ -70,7 +70,6 @@ def extract_data(_A, data_path, split_name, save_unlabel_data=True):
                 selected_sen.append(sen)
                 selected_tag.append(tags)
 
-            if len(selected_sen) == _A.total_training_num: break
     else:
         raise ValueError("few_shot_k and total_training_num cannot be non-positive!")
 

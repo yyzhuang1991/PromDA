@@ -23,12 +23,7 @@ OUTPUT_ROOT=$DATASET\_$RANDOM_SEED\_shot_$SHOT\_tag_keyword_two_prefix_$LM_STEP\
 PRETRAINED_PT_LM=pretrain_web_page_keyword_t5_short
 
 # generate few-shot training data & unlabeled data.
-if [[ $SAMPLE_WITH_LABELS -eq 1 ]]
-then
-  python generate_few_shot_data_sen_classification.py --data-path $DATA_ROOT --output-path $OUTPUT_ROOT --few-shot-k $SHOT --random-seed $RANDOM_SEED --min-length 0
-else
-  python generate_few_shot_data_sen_classification.py --data-path $DATA_ROOT --output-path $OUTPUT_ROOT --total-training-num $SHOT --random-seed $RANDOM_SEED --min-length 0
-fi
+python generate_few_shot_data_sen_classification.py --data-path $DATA_ROOT --output-path $OUTPUT_ROOT --total-training-num 1 --random-seed $RANDOM_SEED --min-length 0
 
 CUDA_VISIBLE_DEVICES=$GPUID python train_data_agumentation.py --config $CONFIG_ROOT/nlg_prefix.yml \
  				--config-override checkpoint_every_step $LM_STEP num_training_steps $LM_STEP select_model_by_ppl True load_from_pretrained True training_da_mode "['keyword','tag']" eval_da_mode "['keyword','tag']" max_length $MAX_LENGTH train_path $OUTPUT_ROOT/train_whole_$SHOT.txt random_seed $RANDOM_SEED dev_path $OUTPUT_ROOT/train_whole_$SHOT.txt \
